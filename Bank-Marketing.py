@@ -7,6 +7,8 @@ Created on Wed May 25 08:26:10 2022
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
@@ -14,6 +16,9 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import KFold
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
 
 url = 'bank-full.csv'
 data = pd.read_csv(url)
@@ -94,6 +99,8 @@ for train, test in kfold.split(x, y):
     acc_scores_train_train.append(scores_train_train)
     acc_scores_test_train.append(scores_test_train)
     
+y_pred = logreg.predict(x_test_out)
+
 # MÉTRICAS
 
 print('*'*50)
@@ -152,3 +159,22 @@ print(f'accuracy de Test de Entrenamiento: {arbol.score(x_test, y_test)}')
 
 # Accuracy de Validación
 print(f'accuracy de Validación: {arbol.score(x_test_out, y_test_out)}')
+
+
+# Matriz de confusión
+print(f'Matriz de confusión: {confusion_matrix(y_test_out, y_pred)}')
+
+matriz_confusion = confusion_matrix(y_test_out, y_pred)
+plt.figure(figsize = (6, 6))
+sns.heatmap(matriz_confusion)
+plt.title("Mariz de confución")
+
+precision = precision_score(y_test_out, y_pred, average=None).mean()
+print(f'Precisión: {precision}')
+
+recall = recall_score(y_test_out, y_pred, average=None).mean()
+print(f'Re-call: {recall}')
+
+f1_score = f1_score(y_test_out, y_pred, average=None).mean()
+
+print(f'f1: {f1_score}')
